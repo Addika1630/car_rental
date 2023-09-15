@@ -4,7 +4,7 @@
 '''
 from models.base_model import BaseModel, Base
 from models.rental import Rental
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 from os import getenv
 
@@ -23,6 +23,7 @@ class User(BaseModel, Base):
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
         phone_no = Column(String(20), nullable=True)
+        role = Column(Integer, default=0)
         rentals = relationship("Rental", backref="user",
                               cascade="all, delete-orphan")
     else:

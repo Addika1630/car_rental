@@ -233,6 +233,17 @@ img {
   color: var(--first-color);
 }
 
+.alert.alert-warning,
+.alert.alert-success,
+.alert.alert-danger {
+  display: flex;
+  margin-left: 100px;
+  margin-right: 100px;
+  justify-content: center; /* Horizontal alignment */
+  align-items: center; /* Vertical alignment */
+  text-align: center; /* Center text within the alert */
+}
+
 /*=============== HOME ===============*/
 .home{
   position: relative;
@@ -463,8 +474,10 @@ img {
 
 .popular_img{
   width: 160px;
+  height: 85px;
   margin: .75rem 0 1.25rem 1.5rem;
   transition: .3s;
+  object-fit: cover;
 }
 
 .popular_data{

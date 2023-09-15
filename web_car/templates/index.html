@@ -15,9 +15,27 @@
 
         <!--=============== CSS ===============-->
         <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/styles.css') }}">
-        
+
         <title>Responsive car website</title>
     </head>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            {% if category == 'warning' %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {% elif category == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {% elif category == 'error' %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% endif %}
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <body>
         <!--==================== HEADER ====================-->
         <header class="header" id="header">
@@ -162,8 +180,8 @@
                             <h1 class="popular_title">{{vehicle.type}}</h1>
                             <h3 class="popular_subtitle">{{vehicle.brand}}</h3>
 
-                            <img src="{{ url_for('static', filename='assets/img/popular1.png') }}" alt="" class="popular_img">
-
+                            <img src="{{ url_for('uploaded_image', vehicle_id=vehicle.id) }}" class="popular_img" alt="{{ vehicle.type }} Image">
+        
                             <div class="popular_data">
                                 <div class="popular_data-group">
                                     <i class="ri-team-line"></i>{{vehicle.capacity}} sets
@@ -592,3 +610,5 @@
         <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
     </body>
 </html>
+
+

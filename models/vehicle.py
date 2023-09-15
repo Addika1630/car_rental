@@ -3,7 +3,7 @@
     Implementation of the User class which inherits from BaseModel
 '''
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, LargeBinary
 from sqlalchemy.orm import relationship
 from os import getenv
 
@@ -19,10 +19,10 @@ class Vehicle(BaseModel, Base):
     if storage_type == 'db':
         capacity = Column(String(128), nullable=False)
         price_per_day = Column(String(128), nullable=False)
-        model = Column(String(128), nullable=True)
         type = Column(String(128), nullable=True)
         color = Column(String(60), nullable=True)
         brand = Column(String(60), nullable=True)
+        image_data = Column(LargeBinary, nullable=True)
         rentals = relationship("Rental", backref="vehicle",
                               cascade="all, delete-orphan")
     else:

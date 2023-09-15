@@ -199,6 +199,17 @@ img{
   display: none;
 }
 
+.alert.alert-warning,
+.alert.alert-success,
+.alert.alert-danger {
+  display: flex;
+  margin-left: 100px;
+  margin-right: 100px;
+  justify-content: center; /* Horizontal alignment */
+  align-items: center; /* Vertical alignment */
+  text-align: center; /* Center text within the alert */
+}
+
 /* ===== MEDIA QUERIES =====*/
 @media screen and (min-width: 576px){
   .login__forms{

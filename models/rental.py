@@ -22,7 +22,7 @@ class Rental(BaseModel, Base):
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
         start_date = Column(String(60), nullable=False)
         end_date = Column(String(60), nullable=False)
-        total_cost = Column(String(60), nullable=False)
+        total_cost = Column(String(60), nullable=True)
     else:
         vehicle_id = ""
         user_id = ""
