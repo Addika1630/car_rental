@@ -1,42 +1,249 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Responsive Registration Form</title>
-    <meta name="viewport" content="width=device-width,
-      initial-scale=1.0"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='assetsss/style.css') }}" />
-  </head>
-  <body>
-    <div class="container">
-      <h1 class="form-title">Booking</h1>
-      <form action="{{ url_for('book') }}" method="post">
-        <div class="main-user-info">
-          <div class="user-input-box">
-            <label for="vehicle_type">Available Cars</label>
-            <select type="text" id="vehicle_type" name="vehicle_type">{% for vehicle in vehicles %}
-              <option value={{vehicle.type}},{{vehicle.brand}},{{vehicle.capacity}},{{vehicle.price_per_day}} >{{vehicle.type}} | {{vehicle.brand}} | {{vehicle.capacity}} sets | {{vehicle.price_per_day}} price per day</option>
-              {% endfor %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-              <!-- Add more options as needed -->
-          </select>
-          </div>
+        <!--=============== FAVICON ===============-->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='assets/img/favicon.png') }}" type="image/x-icon">
 
-          <div class="user-input-box">
-            <label for="start_date">Start Date</label>
-            <input type="date" id="start_date" name="start_date" placeholder="Enter Start Date"/>
-          </div>
+        <!--=============== REMIX ICONS ===============-->
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
-          <div class="user-input-box">
-            <label for="end_date">End Date</label>
-            <input type="date" id="end_date" name="end_date" placeholder="Enter End Date"/>
-          </div>
-        </div>
+        <!--=============== SWIPER CSS ===============-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/swiper-bundle.min.css') }}">
 
-        <div class="form-submit-btn">
-          <input type="submit" value="Book Now">
-        </div>
-      </form>
-    </div>
-  </body>
+        <!--=============== CSS ===============-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/styles.css') }}">
+
+        <!-- Include Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <title>Responsive car website</title>
+    </head>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            {% if category == 'warning' %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {% elif category == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {% elif category == 'error' %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% endif %}
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <body>
+        <!--==================== HEADER ====================-->
+        <header class="header" id="header">
+            <nav class="nav container">
+                <a href="#" class="nav_logo">
+                    <i class="ri-steering-line"></i>
+                    Elecar
+                </a>
+
+                <div class="nav_menu" id="nav-menu">
+                    <ul class="nav_list">
+                        <li class="nav_item">
+                            <a href="{{ url_for('index') }}#home" class="nav_link active-link">Home</a>
+                        </li>
+                        <li class="nav_item">
+                            <a href="{{ url_for('index') }}#about" class="nav_link">About</a>
+                        </li>
+                        <li class="nav_item">
+                            <a href="{{ url_for('index') }}#popular" class="nav_link">Popular</a>
+                        </li>
+                        <li class="nav_item">
+                            <a href="{{ url_for('index') }}#featured" class="nav_link">Featured</a>
+                        </li>
+                        <li class="nav_item">
+                            <a href="{{ url_for('index') }}#popular" class="nav_link">BOOK</a>
+                        </li>
+                        {% if is_user_authenticated() %}
+                        <li class="nav_item">
+                            <a href="{{ url_for('logout') }}" class="nav_link">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav_item">
+                            <a href="{{url_for('signup')}} " class="nav_link">Sign In</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+
+                    <div class="nav_close" id="nav-close">
+                        <i class="ri-close-line"></i>
+                    </div>
+                </div>
+
+                <!-- Toggle button -->
+                <div class="nav_toggle" id="nav-toggle">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </nav>
+        </header>
+
+        <!--==================== MAIN ====================-->
+        <section>
+            <div class="booking_container">
+                <div class="">
+                    <article class="booking_card">
+                        <!-- Car details -->
+                        <div class="booking">
+                            <div class="booking_title_subtitle">
+                                <h1 class="popular_title booking_title">{{vehicle.type}}</h1>
+                                <h3 class="popular_subtitle booking_subtitle">{{vehicle.brand}}</h3>
+                            </div>
+                            <div class="booking_image">
+                                <img src="{{ url_for('uploaded_image', vehicle_id=vehicle.id) }}" class="popular_img booking_img" alt="Selected Car Image">
+                            </div>
+                        </div>
+                        
+                        <form action="{{ url_for('book') }}?vehicle_type={{ vehicle.type }}&vehicle_brand={{ vehicle.brand }}&vehicle_capacity={{ vehicle.capacity }}&vehicle_price_per_day={{ vehicle.price_per_day }}" method="POST" class="booking-form">
+                            <div class="booking_data">
+                                <div class="booking_data-group">
+                                    <i class="ri-charging-pile-2-line"></i>Type: {{vehicle.brand}}
+                                </div>
+                                <div class="booking_data-group">
+                                    <i class="ri-team-line"></i>Seats: {{vehicle.capacity}}
+                                </div>
+                                <div class="booking_data-group">
+                                    <i class="ri-exchange-dollar-line"></i>Price: {{vehicle.price_per_day}}
+                                </div>
+                      
+                                <div class="booking_data-group booking_date">
+                                    <label for="start_date">Start Date:</label>
+                                    <input type="date" id="start_date" name="start_date" required>
+                                </div>
+                      
+                                <div class="booking_data-group booking_date">
+                                    <label for="end_date">End Date:</label>
+                                    <input type="date" id="end_date" name="end_date" required>
+                                </div>
+                                <input type="hidden" name="vehicle_type" value="{{ vehicle.type }}">
+                                <input type="hidden" name="vehicle_brand" value="{{ vehicle.brand }}">
+                                <input type="hidden" name="vehicle_capacity" value="{{ vehicle.capacity }}">
+                                <input type="hidden" name="vehicle_price_per_day" value="{{ vehicle.price_per_day }}">
+    
+                            <button type="submit" class="booking_button">Book Now</button>
+                          </div>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== FOOTER ====================-->
+        <footer class="footer section">
+            <div class="shape shape_big"></div>
+            <div class="shape shape_small"></div>
+
+            <div class="footer_container container grid">
+                <div class="footer_content">
+                    <a href="#" class="footer_logo">
+                        <i class="ri-steering-line"></i> Elecar
+                    </a>
+                    <p class="footer_description">
+                        We offer the best electric cars of <br>
+                        the most recognized brands in <br>
+                        the world.
+                    </p>
+                </div>
+
+                <div class="footer_content">
+                    <h3 class="footer_title">
+                        Company
+                    </h3>
+
+                    <ul class="footer_links">
+                        <li>
+                            <a href="#" class="footer_link">About</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer_link">Cars</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer_link">History</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer_link">Shop</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="footer_content">
+                    <h3 class="footer_title">
+                        Information
+                    </h3>
+
+                    <ul class="footer_links">
+                        <li>
+                            <a href="#" class="footer_link">Request a quote</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer_link">Find a dealer</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer_link">Contact us</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer_link">Services</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="footer_content">
+                    <h3 class="footer_title">
+                        Follow us
+                    </h3>
+
+                    <ul class="footer_social">
+                        <a href="https://www.facebook.com/" target="_blank" class="footer_social-link">
+                            <i class="ri-facebook-fill"></i>
+                        </a>
+                        <a href="https://www.instagram.com/" target="_blank" class="footer_social-link">
+                            <i class="ri-instagram-line"></i>
+                        </a>
+                        <a href="https://www.twitter.com/" target="_blank" class="footer_social-link">
+                            <i class="ri-twitter-line"></i>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+
+            <span class="footer_copy">
+                &#169; Addisu. All rights reserved
+            </span>
+        </footer>
+
+
+        <!--========== SCROLL UP ==========-->
+        <a href="#" class="scrollup" id="scroll-up">
+            <i class="ri-arrow-up-line"></i>
+        </a>
+
+        <!--=============== SCROLL REVEAL ===============-->
+        <script src="{{ url_for('static', filename='assets/js/scrollreveal.min.js') }}"></script>
+
+        <!--=============== SWIPER JS ===============-->
+        <script src="{{ url_for('static', filename='assets/js/swiper-bundle.min.js') }}"></script>
+
+        <!--=============== MIXITUP JS ===============-->
+        <script src="{{ url_for('static', filename='assets/js/mixitup.min.js') }}"></script>
+
+        <!--=============== MAIN JS ===============-->
+        <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+
+        <!-- Include Bootstrap JS and jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 </html>
+
+

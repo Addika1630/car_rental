@@ -199,15 +199,13 @@ img{
   display: none;
 }
 
-.alert.alert-warning,
-.alert.alert-success,
-.alert.alert-danger {
+.alert {
   display: flex;
-  margin-left: 100px;
-  margin-right: 100px;
-  justify-content: center; /* Horizontal alignment */
-  align-items: center; /* Vertical alignment */
-  text-align: center; /* Center text within the alert */
+  width: 87%;
+  margin: 0 5%;
+  justify-content: center; 
+  align-items: center; 
+  text-align: center; 
 }
 
 /* ===== MEDIA QUERIES =====*/
@@ -215,6 +213,9 @@ img{
   .login__forms{
     width: 348px;
     justify-self: center;
+  }
+  .alert {
+    font-size: var(--small-font-size);
   }
 }
 
@@ -257,3 +258,14 @@ img{
     bottom: -5.5rem;
   }
 }
+
+@media screen and (max-width: 567px) {
+  .alert{
+    font-size: var(--small-font-size);
+    margin: 0;
+    width: auto;
+    white-space: nowrap
+  }
+}
+
+

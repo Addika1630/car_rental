@@ -18,24 +18,6 @@
 
         <title>Responsive car website</title>
     </head>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            {% if category == 'warning' %}
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {% elif category == 'success' %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {% elif category == 'error' %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {% endif %}
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
     <body>
         <!--==================== HEADER ====================-->
         <header class="header" id="header">
@@ -59,13 +41,16 @@
                         <li class="nav_item">
                             <a href="#featured" class="nav_link">Featured</a>
                         </li>
+                        <li class="nav_item">
+                            <a href="#popular" class="nav_link">BOOK</a>
+                        </li>
                         {% if is_user_authenticated() %}
                         <li class="nav_item">
                             <a href="{{ url_for('logout') }}" class="nav_link">Logout</a>
                         </li>
                         {% else %}
                         <li class="nav_item">
-                            <a href="{{url_for('signup')}}" class="nav_link">Sign Up</a>
+                            <a href="{{url_for('signup')}} " class="nav_link">Sign In</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -136,6 +121,46 @@
                 </div>
             </section>
 
+            <!--==================== POPULAR ====================-->
+            <section class="popular section" id="popular">
+                <h2 class="section__title">
+                    Choose Your Car <br> Of The Best Brand
+                </h2>
+
+                <div class="popular_container container swiper">
+                    <div class="swiper-wrapper">{% for vehicle in vehicles %}
+                        <article class="popular_card swiper-slide">
+                            <div class="shape shape_smaller"></div>
+
+                            <h1 class="popular_title">{{vehicle.type}}</h1>
+                            <h3 class="popular_subtitle">{{vehicle.brand}}</h3>
+
+                            <img src="{{ url_for('uploaded_image', vehicle_id=vehicle.id) }}" class="popular_img" alt="{{ vehicle.type }} Image">
+        
+                            <div class="popular_data">
+                                <div class="popular_data-group">
+                                    <i class="ri-team-line"></i>{{vehicle.capacity}} sets
+                                </div>
+                                <div class="popular_data-group">
+                                    <i class="ri-funds-box-line"></i> 356 Km/h
+                                </div>
+                                <div class="popular_data-group">
+                                    <i class="ri-charging-pile-2-line"></i> Electric
+                                </div>
+                            </div>
+
+                            <h3  class="popular_price">${{vehicle.price_per_day}} </h3>Per Day
+
+                            <a href="{{ url_for('booking') }}?vehicle_type={{ vehicle.type }}&vehicle_brand={{ vehicle.brand }}&vehicle_capacity={{ vehicle.capacity }}&vehicle_price_per_day={{ vehicle.price_per_day }}" class="button popular_button">
+                                BOOK
+                            </a>
+                        </article>{% endfor %}
+                    </div>
+
+                    <div class="swiper-pagination"></div>
+                </div>
+            </section>
+
             <!--==================== ABOUT ====================-->
             <section class="about section" id="about">
                 <div class="about_container container grid">
@@ -163,154 +188,6 @@
 
                         <a href="#" class="button">Know more</a>
                     </div>
-                </div>
-            </section>
-
-            <!--==================== POPULAR ====================-->
-            <section class="popular section" id="popular">
-                <h2 class="section__title">
-                    Choose Your Electric Car <br> Of The Porsche Brand
-                </h2>
-
-                <div class="popular_container container swiper">
-                    <div class="swiper-wrapper">{% for vehicle in vehicles %}
-                        <article class="popular_card swiper-slide">
-                            <div class="shape shape_smaller"></div>
-
-                            <h1 class="popular_title">{{vehicle.type}}</h1>
-                            <h3 class="popular_subtitle">{{vehicle.brand}}</h3>
-
-                            <img src="{{ url_for('uploaded_image', vehicle_id=vehicle.id) }}" class="popular_img" alt="{{ vehicle.type }} Image">
-        
-                            <div class="popular_data">
-                                <div class="popular_data-group">
-                                    <i class="ri-team-line"></i>{{vehicle.capacity}} sets
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-funds-box-line"></i> 356 Km/h
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-charging-pile-2-line"></i> Electric
-                                </div>
-                            </div>
-
-                            <h3  class="popular_price">${{vehicle.price_per_day}} </h3>Per Day
-
-                            <a href="{{ url_for('booking') }}" class="button popular_button">
-                                BOOK
-                            </a>
-                        </article>{% endfor %}
-
-                        <article class="popular_card swiper-slide">
-                            <div class="shape shape_smaller"></div>
-
-                            <h1 class="popular_title">Porsche</h1>
-                            <h3 class="popular_subtitle">Taycan</h3>
-
-                            <img src="{{ url_for('static', filename='assets/img/popular2.png') }}" alt="" class="popular_img">
-
-                            <div class="popular_data">
-                                <div class="popular_data-group">
-                                    <i class="ri-dashboard-3-line"></i> 3.7 Sec
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-funds-box-line"></i> 356 Km/h
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-charging-pile-2-line"></i> Electric
-                                </div>
-                            </div>
-
-                            <h3  class="popular_price">$114,900</h3>
-
-                            <button class="button popular_button">
-                                <i class="ri-shopping-bag-2-line"></i>
-                            </button>
-                        </article>
-
-                        <article class="popular_card swiper-slide">
-                            <div class="shape shape_smaller"></div>
-
-                            <h1 class="popular_title">Porsche</h1>
-                            <h3 class="popular_subtitle">Turbo S Cross</h3>
-
-                            <img src="{{ url_for('static', filename='assets/img/popular3.png') }}" alt="" class="popular_img">
-
-                            <div class="popular_data">
-                                <div class="popular_data-group">
-                                    <i class="ri-dashboard-3-line"></i> 3.7 Sec
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-funds-box-line"></i> 356 Km/h
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-charging-pile-2-line"></i> Electric
-                                </div>
-                            </div>
-
-                            <h3  class="popular_price">$150,900</h3>
-
-                            <button class="button popular_button">
-                                <i class="ri-shopping-bag-2-line"></i>
-                            </button>
-                        </article>
-
-                        <article class="popular_card swiper-slide">
-                            <div class="shape shape_smaller"></div>
-
-                            <h1 class="popular_title">Porsche</h1>
-                            <h3 class="popular_subtitle">Boxster 718</h3>
-
-                            <img src="{{ url_for('static', filename='assets/img/popular4.png') }}" alt="" class="popular_img">
-
-                            <div class="popular_data">
-                                <div class="popular_data-group">
-                                    <i class="ri-dashboard-3-line"></i> 3.7 Sec
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-funds-box-line"></i> 356 Km/h
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-charging-pile-2-line"></i> Electric
-                                </div>
-                            </div>
-                            
-                            <h3  class="popular_price">$125,900</h3>
-
-                            <button class="button popular_button">
-                                <i class="ri-shopping-bag-2-line"></i>
-                            </button>
-                        </article>
-
-                        <article class="popular_card swiper-slide">
-                            <div class="shape shape_smaller"></div>
-
-                            <h1 class="popular_title">Porsche</h1>
-                            <h3 class="popular_subtitle">cayman</h3>
-
-                            <img src="{{ url_for('static', filename='assets/img/popular5.png') }}" alt="" class="popular_img">
-
-                            <div class="popular_data">
-                                <div class="popular_data-group">
-                                    <i class="ri-dashboard-3-line"></i> 3.7 Sec
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-funds-box-line"></i> 356 Km/h
-                                </div>
-                                <div class="popular_data-group">
-                                    <i class="ri-charging-pile-2-line"></i> Electric
-                                </div>
-                            </div>
-
-                            <h3  class="popular_price">$128,900</h3>
-
-                            <button class="button popular_button">
-                                <i class="ri-shopping-bag-2-line"></i>
-                            </button>
-                        </article>
-                    </div>
-
-                    <div class="swiper-pagination"></div>
                 </div>
             </section>
 

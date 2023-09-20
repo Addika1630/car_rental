@@ -17,7 +17,7 @@ import os
 import base64
 storage.all()
 
-app.secret_key = secrets.token_hex(16)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 
 app.config['UPLOAD_FOLDER'] = 'zdatabase' 
 app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'jpeg', 'png', 'gif'}  
@@ -52,7 +52,7 @@ def inject_is_user_authenticated():
     Returns:
         dict: A dictionary containing the 'is_user_authenticated' function.
     """
-    
+
     return dict(is_user_authenticated=is_user_authenticated)
 
 @app.route('/', strict_slashes=False)
@@ -116,11 +116,11 @@ def signin():
         if user.email == email and user.password == password:
             session['user_authenticated'] = True
             session['user_id'] = user.id
-            flash("You have successfully logged in", "success")
             if user.role == 1:
                 return render_template('admin_base.html')
             else:
                 return render_template('index.html', vehicles=vehicles)
+    flash("Incorrect email or password, please try again !", "error")
     return render_template('signup.html')
 
 @app.route('/logout')
@@ -132,6 +132,12 @@ def logout():
     vehicles = storage.all(Vehicle).values()
     return render_template('index.html', vehicles=vehicles)
 
+@app.route('/index.html')
+def index_html():
+    # Your view logic for index.html here
+    return redirect(url_for('logout'))
+
+
 @app.route('/book', methods=['POST', 'GET'])
 def book():
     # Your logout logic here
@@ -141,11 +147,11 @@ def book():
     start_date = request.form['start_date']
     end_date = request.form['end_date']
 
-    values = vehicle_types.split(',')
-    vehicle_type = values[0]
-    vehicle_brand = values[1]
-    vehicle_capacity = values[2]
-    vehicle_price_per_day = values[3]
+    vehicle_type = request.args.get('vehicle_type')
+    vehicle_brand = request.args.get('vehicle_brand')
+    vehicle_capacity = request.args.get('vehicle_capacity')
+    vehicle_price_per_day = request.args.get('vehicle_price_per_day')
+    
 
     vehicles = storage.all(Vehicle).values()
     for vehicle in vehicles:
@@ -154,15 +160,23 @@ def book():
             vehicle_id = vehicle.id
             rental = Rental(start_date=start_date, end_date=end_date, user_id=user_id, vehicle_id=vehicle_id, total_cost=12)
             rental.save()
-    
-    return render_template('index.html', vehicles=vehicles)
+    flash("Booking successfully!", "success")
+    return render_template('booking.html', vehicles=vehicles)
 
 @app.route('/booking')
 def booking():
     if is_user_authenticated():
+        vehicle_type = request.args.get('vehicle_type')
+        vehicle_brand = request.args.get('vehicle_brand')
+        vehicle_capacity = request.args.get('vehicle_capacity')
+        vehicle_price_per_day = request.args.get('vehicle_price_per_day')
+    
         vehicles = storage.all(Vehicle).values()
-        return render_template('booking.html', vehicles=vehicles)
+        for vehicle in vehicles:
+            if vehicle.brand == vehicle_brand and vehicle.capacity == vehicle_capacity:
+                return render_template('booking.html', vehicle=vehicle)
     else:
+        flash("Please login first !", "warning")
         return render_template('signup.html')
 
 @app.route('/admin_dashboard')
