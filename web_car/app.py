@@ -160,8 +160,7 @@ def book():
             vehicle_id = vehicle.id
             rental = Rental(start_date=start_date, end_date=end_date, user_id=user_id, vehicle_id=vehicle_id, total_cost=12)
             rental.save()
-    flash("Booking successfully!", "success")
-    return render_template('booking.html', vehicles=vehicles)
+    return render_template('index.html', vehicles=vehicles)
 
 @app.route('/booking')
 def booking():

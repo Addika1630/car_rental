@@ -16,29 +16,8 @@
         <!--=============== CSS ===============-->
         <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/styles.css') }}">
 
-        <!-- Include Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
         <title>Responsive car website</title>
     </head>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            {% if category == 'warning' %}
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {% elif category == 'success' %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {% elif category == 'error' %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {% endif %}
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
     <body>
         <!--==================== HEADER ====================-->
         <header class="header" id="header">
@@ -239,10 +218,6 @@
         <!--=============== MAIN JS ===============-->
         <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
 
-        <!-- Include Bootstrap JS and jQuery -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
 </html>
 
